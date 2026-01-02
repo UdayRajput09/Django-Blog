@@ -1,0 +1,48 @@
+{% extends "blog/base.html" %}
+
+{% block content %}
+<div class="container-md">
+
+    <a href="{% url 'post_detail' post.slug %}" class="text-decoration-none text-muted mb-3 d-inline-block">
+      ← Back to Post
+    </a>
+  
+    <div class="card border-danger shadow-sm">
+      <div class="card-body">
+  
+        <h4 class="card-title text-danger mb-3">
+          Delete Post
+        </h4>
+  
+        <p>
+          Are you sure you want to permanently delete the post:
+        </p>
+  
+        <p class="fw-bold">
+          “{{ post.title }}”
+        </p>
+  
+        <p class="text-muted">
+          This action cannot be undone.
+        </p>
+  
+        <form method="POST">
+          {% csrf_token %}
+  
+          <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'post_detail' post.slug %}" class="btn btn-outline-secondary">
+              Cancel
+            </a>
+  
+            <button type="submit" class="btn btn-danger">
+              Yes, Delete Post
+            </button>
+          </div>
+        </form>
+  
+      </div>
+    </div>
+  
+  </div>
+  
+{% endblock content %}

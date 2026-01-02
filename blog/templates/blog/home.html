@@ -1,0 +1,123 @@
+{% extends "blog/base.html" %}
+
+{% block title %} Home | My Blog {% endblock title %}
+
+{% block content %}
+
+<div class="mb-4">
+    <h2 class="fw-bold">Welcome to My Blog</h2>
+    <p class="text-muted">
+      Read posts, share thoughts, and explore ideas.
+    </p>
+  </div>
+  
+
+
+  <form method="GET" class="mb-4">
+    <div class="input-group">
+      <input
+        type="text"
+        name="q"
+        class="form-control"
+        placeholder="Search posts..."
+        value="{{ request.GET.q }}"
+      >
+      <button class="btn btn-primary" type="submit">
+        Search
+      </button>
+    </div>
+  </form>
+  
+
+        {% if request.GET.q %}
+            <p>Showing results for "{{ request.GET.q }}"</p>
+        {% endif %}
+
+        {% if posts %}
+        
+        <div class="row">
+            {% for post in posts %}
+              <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                  <div class="card-body d-flex flex-column">
+          
+                    <h5 class="card-title">
+                      <a
+                        href="{% url 'post_detail' post.slug %}"
+                        class="text-decoration-none text-dark"
+                      >
+                        {{ post.title }}
+                      </a>
+                    </h5>
+          
+                    <p class="mb-2">
+                      <a
+                        href="{% url 'profile' post.author.username %}"
+                        class="text-decoration-none"
+                      >
+                        <span class="badge bg-secondary">
+                          {{ post.author.username }}
+                        </span>
+                      </a>
+                      <span class="text-muted ms-2">
+                        {{ post.created_at|date:"F d, Y" }}
+                      </span>
+                    </p>
+          
+                    <p class="card-text flex-grow-1">
+                      {{ post.content|truncatewords:20 }}
+                    </p>
+          
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                      <a
+                        href="{% url 'post_detail' post.slug %}"
+                        class="btn btn-sm btn-primary"
+                      >
+                        Read
+                      </a>
+          
+                      <small class="text-muted">
+                        ❤️ {{ post.likes.count }} · 💬 {{ post.comments.count }}
+                      </small>
+                    </div>
+          
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          
+      
+        {% else %}
+            {% if request.GET.q %}
+                <p>No posts found.</p>
+            {% endif %}
+        {% endif %}
+
+
+
+        <div class="d-flex justify-content-center gap-2 mt-4">
+            {% if posts.has_previous %}
+              <a
+                class="btn btn-outline-primary"
+                href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+              >
+                ← Previous
+              </a>
+            {% endif %}
+          
+            {% if posts.has_next %}
+              <a
+                class="btn btn-outline-primary"
+                href="?page={{ posts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+              >
+                Next →
+              </a>
+            {% endif %}
+          </div>
+          
+        
+
+
+
+{% endblock content%}
